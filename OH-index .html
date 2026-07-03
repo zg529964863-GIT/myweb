@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佳开鸿软件原型设计</title>
+    <style>
+        :root {
+            --bg-color: #050914;
+            --card-bg: rgba(30, 41, 59, 0.2); /* 加深大卡片背景 */
+            --card-border: rgba(255, 255, 255, 0.08);
+            --sub-card-bg: rgba(15, 23, 42, 0.6); /* 高对比度子卡片深色背景 */
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+            --rail-theme: #00d2ff;
+            --city-theme: #38ef7d;
+        }
+
+        body {
+            margin: 0;
+            padding: 50px 30px;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 210, 255, 0.1) 0px, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(56, 239, 125, 0.06) 0px, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1440px;
+        }
+
+        header {
+            margin-bottom: 50px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #ffffff 60%, var(--rail-theme));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-sub);
+            margin: 0;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* 行业大板块区域 */
+        .industry-section {
+            margin-bottom: 60px;
+        }
+
+        .industry-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-left: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .industry-title.rail { color: var(--rail-theme); border-left: 5px solid var(--rail-theme); }
+        .industry-title.city { color: var(--city-theme); border-left: 5px solid var(--city-theme); }
+
+        /* 网格布局 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 30px;
+        }
+
+        /* 大卡片样式 */
+        .category-group {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .rail-group:hover {
+            border-color: rgba(0, 210, 255, 0.3);
+            box-shadow: 0 12px 35px rgba(0, 210, 255, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .city-group:hover {
+            border-color: rgba(56, 239, 125, 0.3);
+            box-shadow: 0 12px 35px rgba(56, 239, 125, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .group-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1f5f9;
+            letter-spacing: 0.5px;
+        }
+
+        /* 导航链接列表容器 */
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 子卡片样式（高清晰实体感） */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            background: var(--sub-card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.25s ease;
+        }
+
+        /* 左侧高亮指示条 */
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            transition: all 0.25s ease;
+        }
+        .rail-group .nav-item::before { background: var(--rail-theme); }
+        .city-group .nav-item::before { background: var(--city-theme); }
+
+        /* 悬停动效 */
+        .rail-group .nav-item:hover {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(0, 210, 255, 0.5);
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+        .rail-group .nav-item:hover::before { width: 6px; }
+
+        .city-group .nav-item:hover {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(56, 239, 125, 0.5);
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+        .city-group .nav-item:hover::before { width: 6px; }
+
+        /* 右侧版本与类型标志 */
+        .badge {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            font-weight: 400;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .badge.axure {
+            background: rgba(242, 94, 34, 0.12);
+            color: #ff7a45;
+            border-color: rgba(242, 94, 34, 0.2);
+        }
+
+        .nav-item:hover .badge.axure {
+            background: rgba(242, 94, 34, 0.25);
+            color: #ffa37a;
+            border-color: rgba(242, 94, 34, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>佳开鸿软件原型设计</h1>
+        <p>Unified Project Navigation Panel</p>
+    </header>
+
+    <!-- 大板块 01：轨道交通行业 -->
+    <section class="industry-section">
+        <div class="industry-title rail">轨道交通行业</div>
+        
+        <div class="dashboard-grid">
+            
+            <!-- 01 交鸿物联平台 -->
+            <div class="category-group rail-group">
+                <div class="group-title">01 交鸿物联平台 V2.0</div>
+                <div class="nav-links">
+                    <a class="nav-item" href="/myweb-OHScreen-DIY/">
+                        <span>交鸿物联平台 V2.0</span>
+                        <span class="badge axure">Axure 原型</span>
+                    </a>
+                    <a class="nav-item" href="./交鸿物联平台/index.html">
+                        <span>交鸿物联平台 V2.0</span>
+                        <span class="badge">正式版</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 02 鸿蒙调试终端 -->
+            <div class="category-group rail-group">
+                <div class="group-title">02 鸿蒙调试终端</div>
+                <div class="nav-links">
+                    <a class="nav-item" href="./超级物联平台V2.0-html/index.html#id=hutifa&p=鸿蒙物联调试终端2&g=1">
+                        <span>鸿蒙调试终端 - AFC</span>
+                        <span class="badge axure">Axure 原型</span>
+                    </a>
+                    <a class="nav-item" href="./鸿蒙调试终端/index.html">
+                        <span>鸿蒙调试终端 - 水泵</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 03 鸿蒙智慧屏方案 -->
+            <div class="category-group rail-group">
+                <div class="group-title">03 鸿蒙智慧屏方案</div>
+                <div class="nav-links">
+                    <a class="nav-item" href="./鸿蒙智慧屏-3车站群组/index.html"><span>3 车站群组智慧屏</span></a>
+                    <a class="nav-item" href="./鸿蒙智慧屏-5车站群组/index.html"><span>5 车站群组智慧屏</span></a>
+                    <a class="nav-item" href="./鸿蒙智慧屏-DIY模式/main_V1.6.html"><span>智慧屏 - DIY 模式 <small style="color: var(--text-sub); margin-left: 4px;">V1.6</small></span></a>
+                </div>
+            </div>
+
+            <!-- 04 鸿蒙物联管理套件 -->
+            <div class="category-group rail-group">
+                <div class="group-title">04 鸿蒙物联管理套件</div>
+                <div class="nav-links">
+                    <a class="nav-item" href="./鸿蒙物联管理套件/index.html">
+                        <span>鸿蒙物联管理套件</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 大板块 02：城市交通行业 -->
+    <section class="industry-section">
+        <div class="industry-title city">城市交通行业</div>
+        
+        <div class="dashboard-grid">
+            
+            <!-- 01 鸿蒙路口智慧屏系统 -->
+            <div class="category-group city-group">
+                <div class="group-title">01 鸿蒙路口智慧屏</div>
+                <div class="nav-links">
+                    <a class="nav-item" href="./鸿蒙路口智慧屏/index.html">
+                        <span>鸿蒙路口智慧屏</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
