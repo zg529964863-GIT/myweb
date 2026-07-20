@@ -196,6 +196,18 @@
             color: #ffa37a;
             border-color: rgba(242, 94, 34, 0.4);
         }
+
+        /* ========== 新增：全局隐藏滚动条（兼容Chrome/Firefox/Edge/Safari） ========== */
+        html {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/旧Edge */
+        }
+        /* Webkit内核（Chrome、Safari、新版Edge） */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
